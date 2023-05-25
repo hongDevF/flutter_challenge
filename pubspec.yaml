@@ -37,7 +37,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider: ^6.0.5
   google_fonts: ^4.0.4
-  sqflite: ^2.2.8+4
   firebase_core: ^2.13.0
   cloud_firestore: ^4.7.1
   fluttertoast: ^8.2.2
