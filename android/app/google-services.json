@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "993178814299",
+    "project_id": "todo-challenge-f1586",
+    "storage_bucket": "todo-challenge-f1586.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993178814299:android:54f4e01dfba84c360a7c7e",
+        "android_client_info": {
+          "package_name": "com.example.flutter_challenge"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "993178814299-ivad3imlsl83c8fukgu67bp36u6tlsml.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0b49vby-92z_xknr5gINtya2-lT6WVEc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "993178814299-ivad3imlsl83c8fukgu67bp36u6tlsml.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
