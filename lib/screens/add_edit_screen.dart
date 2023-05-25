@@ -30,6 +30,19 @@ class _AddEditScreenState extends State<AddEditScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TodoProvder>(context);
+
+    void onSave() {
+      if (_key.currentState!.validate()) {
+        if (widget.id == null) {
+          provider.createTodo(context, title.text.trim());
+        }
+        if (widget.id != null) {
+          provider.updateItem(widget.id, title.text.trim());
+        }
+        Navigator.pop(context);
+      }
+    }
+
     title.text = widget.oldTitle ?? title.text;
     return Form(
       key: _key,
@@ -49,10 +62,10 @@ class _AddEditScreenState extends State<AddEditScreen> {
             children: [
               const SizedBox(height: 20),
               customTextField(
-                hintText: 'title',
-                controller: title,
-                validator: (value) => Validates.emptyValidate(value),
-              ),
+                  hintText: 'title',
+                  controller: title,
+                  validator: (value) => Validates.emptyValidate(value),
+                  onSubmit: (value) => onSave()),
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -61,17 +74,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                      onPressed: () {
-                        if (_key.currentState!.validate()) {
-                          if (widget.id == null) {
-                            provider.createTodo(context, title.text.trim());
-                          }
-                          if (widget.id != null) {
-                            provider.updateItem(widget.id, title.text.trim());
-                          }
-                          Navigator.pop(context);
-                        }
-                      },
+                      onPressed: () => onSave(),
                       child: DefaultText(
                         text: widget.id != null ? ' Update' : 'Create',
                         color: AppColors.TextWhite,

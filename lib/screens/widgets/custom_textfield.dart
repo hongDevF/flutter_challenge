@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_challenge/helpers/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,6 +8,7 @@ Widget customTextField({
   required String hintText,
   required TextEditingController controller,
   String? Function(String?)? validator,
+  final Function(String?)? onSubmit,
 }) {
   return Padding(
     padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -15,8 +18,10 @@ Widget customTextField({
         fontSize: 16,
         color: Colors.black,
       ),
+      onFieldSubmitted: onSubmit,
       controller: controller,
       validator: validator,
+      textInputAction: TextInputAction.done,
       decoration: InputDecoration(
         fillColor: AppColors.TextWhite,
         filled: true,
@@ -25,6 +30,7 @@ Widget customTextField({
           color: Colors.grey.shade500,
         ),
         hintText: hintText,
+
         // contentPadding: const EdgeInsets.all(5),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
