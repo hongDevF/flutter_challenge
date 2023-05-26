@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -10,7 +9,7 @@ class DatabaseHelper {
       FirebaseFirestore.instance.collection('todos');
 
   // Create Unique item
-  Future createNewTodo(BuildContext context, String title) async {
+  Future createNewTodo(String title) async {
     bool unique = false;
     await FirebaseFirestore.instance
         .collection('todos')
@@ -76,6 +75,13 @@ class DatabaseHelper {
   // get all todo items
   Stream<QuerySnapshot> getTodos() {
     return todoCollection.orderBy('title', descending: true).snapshots();
+  }
+
+  // get&filter Item,
+  Stream<QuerySnapshot> getTodoItems(String searchText) {
+    return todoCollection
+        .where('title', isGreaterThanOrEqualTo: searchText)
+        .snapshots();
   }
 
   // Delete todo item

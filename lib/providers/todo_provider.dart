@@ -5,8 +5,8 @@ import 'package:flutter_challenge/helpers/database_helper.dart';
 class TodoProvder extends ChangeNotifier {
   DatabaseHelper helper = DatabaseHelper();
 
-  Future createTodo(BuildContext context, String title) async {
-    await helper.createNewTodo(context, title);
+  Future createTodo(String title) async {
+    await helper.createNewTodo(title);
     notifyListeners();
   }
 
@@ -22,6 +22,10 @@ class TodoProvder extends ChangeNotifier {
 
   Stream<QuerySnapshot> getTodos() {
     return helper.getTodos();
+  }
+
+  getTodoItems(String searchText) {
+    return helper.getTodoItems(searchText);
   }
 
   Future deleteItem(id) async {

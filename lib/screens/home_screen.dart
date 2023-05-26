@@ -15,8 +15,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool isCompleted = false;
-  String search = '';
+  TextEditingController searchText = TextEditingController();
+
+  @override
+  void dispose() {
+    searchText.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TodoProvder>(context);
@@ -52,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
               autofocus: false,
               onChanged: (value) {
                 setState(() {
-                  search = value;
+                  searchText.text = value;
                 });
               },
               decoration: InputDecoration(
@@ -76,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // list Items
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: provider.getTodos(),
+              stream: provider.getTodoItems(searchText.text.toString()),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   log("Data err");
@@ -84,108 +90,68 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (snapshot.hasData) {
                   QuerySnapshot querySnapshot = snapshot.data!;
                   List<QueryDocumentSnapshot> document = querySnapshot.docs;
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: document.length,
-                    itemBuilder: (context, index) {
-                      final item = document[index];
-                      if (search.isEmpty) {
-                        return Container(
-                          padding: const EdgeInsets.all(5),
-                          margin: const EdgeInsets.only(
-                              top: 10, left: 10, right: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: AppColors.TextWhite,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Transform.scale(
-                                scale: 1.3,
-                                child: Checkbox(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  checkColor: AppColors.TextWhite,
-                                  fillColor: MaterialStateProperty.all<Color>(
-                                      AppColors.AppBarColor),
-                                  activeColor: AppColors.Danger,
-                                  value: item['isComplete'],
-                                  onChanged: (value) =>
-                                      provider.completeTask(item.id),
-                                ),
-                              ),
-                              Expanded(
-                                child: DefaultText(
-                                  text: item['title'],
-                                  fonstSize: 18,
-                                  color: Colors.black,
-                                  textDecoration: item['isComplete']
-                                      ? TextDecoration.lineThrough
-                                      : null,
-                                ),
-                              ),
-                              // button actions
-                              buildActionBtn(item, provider),
-                            ],
-                          ),
-                        );
-                      }
-                      // Search data
-                      if (item['title']
-                          .toString()
-                          .toLowerCase()
-                          .startsWith(search.toLowerCase())) {
-                        return Container(
-                          padding: const EdgeInsets.all(5),
-                          margin: const EdgeInsets.only(
-                              top: 10, left: 10, right: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: AppColors.TextWhite,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Transform.scale(
-                                scale: 1.3,
-                                child: Checkbox(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  checkColor: AppColors.TextWhite,
-                                  fillColor: MaterialStateProperty.all<Color>(
-                                      AppColors.AppBarColor),
-                                  activeColor: AppColors.Danger,
-                                  value: item['isComplete'],
-                                  onChanged: (value) =>
-                                      provider.completeTask(item.id),
-                                ),
-                              ),
-                              Expanded(
-                                child: DefaultText(
-                                  text: item['title'],
-                                  fonstSize: 18,
-                                  color: Colors.black,
-                                  textDecoration: item['isComplete']
-                                      ? TextDecoration.lineThrough
-                                      : null,
-                                ),
-                              ),
-                              // button actions
-                              buildActionBtn(item, provider),
-                            ],
-                          ),
-                        );
-                      }
-                      return null;
-                    },
-                  );
-                }
+                  // log("${document.length}");
+                  if (document.isNotEmpty) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: document.length,
+                      itemBuilder: (context, index) {
+                        final item = document[index];
 
+                        return Container(
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(
+                              top: 10, left: 10, right: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: AppColors.TextWhite,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Transform.scale(
+                                scale: 1.3,
+                                child: Checkbox(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  checkColor: AppColors.TextWhite,
+                                  fillColor: MaterialStateProperty.all<Color>(
+                                      AppColors.AppBarColor),
+                                  activeColor: AppColors.Danger,
+                                  value: item['isComplete'],
+                                  onChanged: (value) =>
+                                      provider.completeTask(item.id),
+                                ),
+                              ),
+                              Expanded(
+                                child: DefaultText(
+                                  text: item['title'],
+                                  fonstSize: 18,
+                                  color: Colors.black,
+                                  textDecoration: item['isComplete']
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                                ),
+                              ),
+                              // button actions
+                              buildActionBtn(item, provider),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return Center(
+                      child: DefaultText(
+                        text: "No have data!",
+                        fonstSize: 30,
+                        color: AppColors.Warning,
+                      ),
+                    );
+                  }
+                }
                 return Container();
               },
             ),

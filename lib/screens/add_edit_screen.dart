@@ -1,8 +1,7 @@
-import 'dart:developer';
+// ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
 import 'package:flutter_challenge/helpers/colors.dart';
-import 'package:flutter_challenge/helpers/database_helper.dart';
 import 'package:flutter_challenge/helpers/validates.dart';
 import 'package:flutter_challenge/providers/todo_provider.dart';
 import 'package:flutter_challenge/screens/widgets/custom_textfield.dart';
@@ -30,11 +29,12 @@ class _AddEditScreenState extends State<AddEditScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TodoProvder>(context);
+    title.text = widget.oldTitle ?? title.text;
 
     void onSave() {
       if (_key.currentState!.validate()) {
         if (widget.id == null) {
-          provider.createTodo(context, title.text.trim());
+          provider.createTodo(title.text.trim());
         }
         if (widget.id != null) {
           provider.updateItem(widget.id, title.text.trim());
@@ -43,7 +43,6 @@ class _AddEditScreenState extends State<AddEditScreen> {
       }
     }
 
-    title.text = widget.oldTitle ?? title.text;
     return Form(
       key: _key,
       child: Scaffold(
